@@ -1,0 +1,18 @@
+spring:
+  docker:
+    compose:
+      enabled: false
+  data:
+    mongodb:
+      user: root
+      password: secret
+      uri: mongodb://localhost:27017/secret-santa-app
+  jpa:
+    hibernate:
+      ddl-auto: none
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: myuser
+    password: secret
+
