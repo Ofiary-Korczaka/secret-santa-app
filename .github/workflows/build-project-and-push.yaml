@@ -1,0 +1,36 @@
+name: Build project and push image to Docker registry
+
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  build-project-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Execute Gradle build
+        run: ./gradlew build
+
+      - name: Build Docker image
+        run: ./gradlew bootBuildImage --imageName ${{ secrets.DOCKER_REPO_HOST }}/secret-santa-app:latest
+
+      - name: Login to private Docker registry
+        run: echo ${{ secrets.DOCKER_REPO_PASSWORD }} | docker login -u ${{ secrets.DOCKER_REPO_USERNAME }} --password-stdin ${{ secrets.DOCKER_REPO_HOST }}
+
+      - name: Push image to private Docker registry
+        run: docker push ${{ secrets.DOCKER_REPO_HOST }}/secret-santa-app:latest
+
+
