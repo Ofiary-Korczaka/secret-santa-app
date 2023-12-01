@@ -3,6 +3,8 @@ spring:
     compose:
       enabled: true
       file: docker-compose.yml
+      profiles:
+        active: dev
   jpa:
     hibernate:
       ddl-auto: create-drop

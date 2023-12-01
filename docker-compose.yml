@@ -1,16 +1,65 @@
+version: "3.8"
+
 services:
   mongodb:
     image: 'mongo:latest'
     environment:
-      - 'MONGO_INITDB_DATABASE=secret-santa-app'
-      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
-      - 'MONGO_INITDB_ROOT_USERNAME=root'
+      - MONGO_INITDB_DATABASE
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
     ports:
-      - '27017'
+      - '27017:27017'
+    volumes:
+      - './init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro'
+    healthcheck:
+      test: mongosh --eval 'db.runCommand("ping").ok' mongodb:27017/test --quiet
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    profiles: ['prod', 'dev']
   rabbitmq:
     image: 'rabbitmq:latest'
     environment:
-      - 'RABBITMQ_DEFAULT_PASS=secret'
-      - 'RABBITMQ_DEFAULT_USER=myuser'
+      - RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS
     ports:
-      - '5672'
+      - '5672:5672'
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 5s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    profiles: ['prod', 'dev']
+  secret-santa-app-web:
+    image: docker.tgawlik.com.pl/secret-santa-app:latest
+    ports:
+      - '8080:8080'
+    environment:
+      - spring.data.mongodb.host
+      - spring.data.mongodb.database
+      - spring.data.mongodb.username
+      - spring.data.mongodb.password
+      - spring.rabbitmq.host
+      - spring.rabbitmq.username
+      - spring.rabbitmq.password
+    labels:
+     - com.centurylinklabs.watchtower.enable=true
+    profiles: ['prod']
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  watchtower:
+    image: 'containrrr/watchtower:latest'
+    environment:
+      - WATCHTOWER_CLEANUP
+      - WATCHTOWER_POLL_INTERVAL
+      - WATCHTOWER_LABEL_ENABLE
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - './config.json:/config.json'
+    profiles: ['prod']
+  
