@@ -13,10 +13,10 @@ services:
       - './init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro'
     healthcheck:
       test: mongosh --eval 'db.runCommand("ping").ok' mongodb:27017/test --quiet
-      interval: 5s
+      interval: 20s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 20s
     profiles: ['prod', 'dev']
   rabbitmq:
     image: 'rabbitmq:latest'
@@ -27,9 +27,9 @@ services:
       - '5672:5672'
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
-      interval: 5s
+      interval: 20s
       timeout: 10s
-      start_period: 10s
+      start_period: 20s
       retries: 3
     profiles: ['prod', 'dev']
   secret-santa-app-web:
