@@ -1,6 +1,7 @@
 package com.example.secretsantaapp.user;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,11 +12,13 @@ import java.util.stream.Collectors;
 public class UserService{
 
     private final UserRepository userRepository;
-
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserDTO createUser(UserCreationDTO userDTO){
         User user = userMapper.convertToEntity(userDTO);
+        String password = user.getPassword();
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         userRepository.save(user);
         return userMapper.convertToDto(user);
     }
