@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController()
-@RequestMapping(value="/user")
+@RequestMapping(value="/api/v1/users")
 @AllArgsConstructor
 public class UserController {
 
@@ -24,15 +24,19 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserByEmail(mail), HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
    @PostMapping()
    public ResponseEntity<UserDTO>  createUser(@RequestBody UserCreationDTO userDTO){
-        //TODO - add password strength check
         return new ResponseEntity<>(userService.createUser(userDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> authenticateUser(@RequestBody UserLoginDTO userLoginDTO){
+        return new ResponseEntity<>(userService.loginUser(userLoginDTO),HttpStatus.OK);
     }
 
 }
