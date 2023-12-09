@@ -1,12 +1,9 @@
 package com.example.secretsantaapp.user;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,19 +15,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final UserMapper userMapper;
-    private final AuthenticationManager authenticationManager;
+    @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserDTO createUser(UserCreationDTO userDTO){
-        if(!isEmpty(getUserByEmail(userDTO.getEmail()))){
+        Optional<User> userCheck = userRepository.findByEmail(userDTO.getEmail());
+        if(userCheck.isPresent()){
             throw new RuntimeException("Email is already taken!");
         }
         User user = userMapper.convertToEntity(userDTO);
@@ -55,12 +53,6 @@ public class UserService implements UserDetailsService {
         return users.stream()
                 .map(userMapper::convertToDto)
                 .collect(Collectors.toList());
-    }
-    public String loginUser(UserLoginDTO userLoginDTO){
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userLoginDTO.getName(), userLoginDTO.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User logged successfully!";
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
