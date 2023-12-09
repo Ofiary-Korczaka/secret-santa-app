@@ -37,13 +37,13 @@ services:
     ports:
       - '8080:8080'
     environment:
-      - spring.data.mongodb.host
-      - spring.data.mongodb.database
-      - spring.data.mongodb.username
-      - spring.data.mongodb.password
-      - spring.rabbitmq.host
-      - spring.rabbitmq.username
-      - spring.rabbitmq.password
+      - SPRING_DATA_MONGODB_HOST
+      - SPRING_DATA_MONGODB_DATABASE
+      - SPRING_DATA_MONGODB_USERNAME
+      - SPRING_DATA_MONGODB_PASSWORD
+      - SPRING_RABBITMQ_HOST
+      - SPRING_RABBITMQ_USERNAME
+      - SPRING_RABBITMQ_PASSWORD
     labels:
      - com.centurylinklabs.watchtower.enable=true
     profiles: ['prod']
