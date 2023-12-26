@@ -28,5 +28,9 @@ docker compose --profile prod up [-d]
 1. All environment variables are configurable in .env file.
 2. Default credentials and app database name are initialized for MongoDB in init-mongo.js file during db first startup.
 
+## API Docs
+Swagger UI: /swagger-ui/index.html
+API Docs: /api-docs
+
 ## Troubleshooting
 TBD
