@@ -1,5 +1,6 @@
 package com.example.secretsantaapp.user;
 
+import com.example.secretsantaapp.user.exceptions.UserNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private final UserMapper userMapper;
     @Autowired
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     public UserDTO createUser(UserCreationDTO userDTO){
         Optional<User> userCheck = userRepository.findByEmail(userDTO.getEmail());
@@ -39,7 +40,10 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO getUserById(String id){
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null){
+            throw new UserNotFoundException("User not found with id: "+id);
+        }
         return userMapper.convertToDto(user);
     }
 
