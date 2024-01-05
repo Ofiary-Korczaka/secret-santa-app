@@ -59,12 +59,8 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userFromRepoByEmail(username);
-        Set<GrantedAuthority> authorities = user.getAuthorities().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
-                .collect(Collectors.toSet());
-        return new org.springframework.security.core.userdetails.User(username,user.getPassword(),authorities);
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userFromRepoByEmail(username);
     }
     //TODO - add deleting users
     private User userFromRepoByEmail(String email) throws UsernameNotFoundException{
