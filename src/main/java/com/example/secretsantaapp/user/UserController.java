@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping("/mail/{mail}")
-    public ResponseEntity<UserDTO>  getUserByEmail(@PathVariable String mail){
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String mail){
         return new ResponseEntity<>(userService.getUserByEmail(mail), HttpStatus.OK);
     }
 
@@ -28,8 +28,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @GetMapping("/verify/{token}")
+    public ResponseEntity<UserDTO> verifyUserEmail(@PathVariable String token) {
+        return new ResponseEntity<>(userService.verifyUserEmail(token), HttpStatus.OK);
+    }
+
    @PostMapping()
-   public ResponseEntity<UserDTO>  createUser(@RequestBody UserCreationDTO userDTO){
+   public ResponseEntity<UserDTO> createUser(@RequestBody UserCreationDTO userDTO){
         return new ResponseEntity<>(userService.createUser(userDTO), HttpStatus.CREATED);
     }
 }
