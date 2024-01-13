@@ -27,6 +27,7 @@ public class MailNotificationService {
         MailNotificationAmqpTemplate.builder()
             .recipientEmail(userDTO.getEmail())
             .messageSubject("Email confirmation")
+            .messageCategory(MailMessageCategory.EMAIL_CONFIRMATION)
             .messageBody(messageContent)
             .build();
 

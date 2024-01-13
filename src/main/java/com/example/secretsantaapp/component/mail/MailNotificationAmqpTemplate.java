@@ -20,6 +20,7 @@ public class MailNotificationAmqpTemplate {
   private String recipientEmail;
   private String messageSubject;
   private String messageBody;
+  private MailMessageCategory messageCategory;
 
   public String toJson() throws GenericErrorException {
     ObjectMapper objectMapper = new ObjectMapper();

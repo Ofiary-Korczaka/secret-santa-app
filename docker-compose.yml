@@ -52,6 +52,18 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+  secret-santa-mail-service:
+    image: docker.tgawlik.com.pl/secret-santa-mail-service:latest
+    environment:
+      - MAIL_SERVICE_RABBIT_HOST
+      - MAIL_SERVICE_RABBIT_USERNAME
+      - MAIL_SERVICE_RABBIT_PASSWORD
+      - MAIL_SERVICE_MAILTRAP_EMAIL
+      - MAIL_SERVICE_MAILTRAP_API_KEY
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    profiles: ['prod']
   watchtower:
     image: 'containrrr/watchtower:latest'
     environment:
