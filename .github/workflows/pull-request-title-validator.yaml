@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: pragmatic-tools/pr-title-validator@1.0.0
         with:
-          pattern: '(SSA-\d{3}|HOTFIX)\s:.*'
+          pattern: '(SSA-\d{3}|HOTFIX):\s.*'
