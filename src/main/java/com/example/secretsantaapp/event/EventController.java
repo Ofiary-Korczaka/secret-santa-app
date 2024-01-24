@@ -53,15 +53,15 @@ public class EventController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @GetMapping("/{eventUniqueId}/participants")
-  public ResponseEntity<List<SantaPairDTO>> getEventParticipants(
+  @GetMapping("/{eventUniqueId}/pair")
+  public ResponseEntity<List<SantaPairDTO>> getEventSantaPairs(
       @PathVariable String eventUniqueId) {
     List<SantaPairDTO> santaPairDTOList = eventService.getSantaPairs(eventUniqueId);
     return new ResponseEntity<>(santaPairDTOList, HttpStatus.OK);
   }
 
-  @PostMapping("/{eventUniqueId}/participants")
-  public ResponseEntity<SantaPairDTO> addEventParticipant(
+  @PostMapping("/{eventUniqueId}/pair")
+  public ResponseEntity<SantaPairDTO> addEventSantaPair(
       @PathVariable String eventUniqueId, @RequestBody SantaPairCreationDTO santaPairCreationDTO) {
 
     //TODO: Change BAD_REQUEST response to sth more readable.
@@ -88,7 +88,7 @@ public class EventController {
     return new ResponseEntity<>(santaPairDTO, HttpStatus.OK);
   }
 
-  public ResponseEntity<SantaPairDTO> removeEventParticipant(
+  public ResponseEntity<SantaPairDTO> removeEventSantaPair(
       String eventUniqueId, UserDTO userDTO) {
     return null;
   }
