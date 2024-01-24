@@ -1,5 +1,6 @@
 package com.example.secretsantaapp.user.exception.handler;
 
+import com.example.secretsantaapp.user.exception.UserAlreadyExistsException;
 import com.example.secretsantaapp.user.exception.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -25,12 +26,22 @@ public class UserExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(UsernameNotFoundException.class)
-  public ResponseEntity<Object> handleUserNameNotFoundException(
+  public ResponseEntity<Object> handleUsernameNotFoundException(
       UsernameNotFoundException ex, WebRequest request) {
     Map<String, Object> body = new LinkedHashMap<>();
     body.put("timestamp", LocalDateTime.now());
     body.put("message", ex.getMessage());
 
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(UserAlreadyExistsException.class)
+  public ResponseEntity<Object> handleUserAlreadyExistsException(
+      UserAlreadyExistsException ex, WebRequest request) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", "User already exists");
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
 }

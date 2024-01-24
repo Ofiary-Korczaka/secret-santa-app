@@ -1,6 +1,7 @@
 package com.example.secretsantaapp.event.exception.handler;
 
 import com.example.secretsantaapp.event.exception.EventNotFoundException;
+import com.example.secretsantaapp.event.exception.UserAlreadyInTheEventException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,5 +22,15 @@ public class EventNotFoundExceptionHandler extends ResponseEntityExceptionHandle
     body.put("message", "Event not found");
 
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(UserAlreadyInTheEventException.class)
+  public ResponseEntity<Object> handleEventNotFoundException(
+      UserAlreadyInTheEventException ex, WebRequest request) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", "User already in the event");
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
 }
