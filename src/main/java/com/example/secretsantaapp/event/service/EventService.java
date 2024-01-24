@@ -1,5 +1,6 @@
 package com.example.secretsantaapp.event.service;
 
+import com.example.secretsantaapp.common.exception.GenericErrorException;
 import com.example.secretsantaapp.event.dto.EventCreationDTO;
 import com.example.secretsantaapp.event.dto.EventDTO;
 import com.example.secretsantaapp.event.dto.SantaPairCreationDTO;
@@ -72,6 +73,19 @@ public class EventService {
     Optional<Event> eventOptional = eventRepository.findByEventUniqueString(eventUniqueId);
 
     Event event = eventOptional.orElseThrow(EventNotFoundException::new);
+
+    if (santaPairCreationDTO.getUserEmail().equals(santaPairCreationDTO.getSecretSantaForEmail())) {
+      throw new GenericErrorException("User cannot be his own secret santa");
+    }
+
+    boolean userAlreadyInEvent =
+        event.getSantaPairs().stream()
+            .anyMatch(
+                santaPair ->
+                    santaPair.getUser().getEmail().equals(santaPairCreationDTO.getUserEmail()));
+    if (userAlreadyInEvent) {
+      throw new GenericErrorException("User already is a secret santa");
+    }
 
     User user = userService.loadUserByUsername(santaPairCreationDTO.getUserEmail());
     User secretSantaFor =

@@ -1,7 +1,6 @@
 package com.example.secretsantaapp.common.exception.handler;
 
 import com.example.secretsantaapp.common.exception.GenericErrorException;
-
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,6 +21,6 @@ public class GenericErrorExceptionHandler extends ResponseEntityExceptionHandler
     body.put("timestamp", LocalDateTime.now());
     body.put("message", ex.getMessage());
 
-    return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
 }

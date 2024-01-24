@@ -79,10 +79,6 @@ public class EventController {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    if (eventService.isUserInEvent(eventUniqueId, userDTO.getEmail())) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
     SantaPairDTO santaPairDTO =
         eventService.addSecretSantaPair(eventUniqueId, santaPairCreationDTO);
     return new ResponseEntity<>(santaPairDTO, HttpStatus.OK);
