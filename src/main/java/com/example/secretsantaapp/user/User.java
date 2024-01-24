@@ -1,18 +1,16 @@
 package com.example.secretsantaapp.user;
 
+import com.example.secretsantaapp.event.model.Event;
+import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Objects;
 
 @ToString
 @Getter
@@ -28,12 +26,15 @@ public class User implements UserDetails {
   private String emailVerificationToken;
 
   private Date emailVerified;
+
+  @DocumentReference(lazy = true)
+  private List<Event> events;
+
   private Date createdAt = new Date();
 
   public User(String name, String password, String email) {
     this.name = Objects.requireNonNull(name);
     this.password = password;
-    // TODO - add email check regex
     this.email = Objects.requireNonNull(email);
   }
 

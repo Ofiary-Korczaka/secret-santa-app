@@ -1,6 +1,6 @@
 package com.example.secretsantaapp.component.mail;
 
-import com.example.secretsantaapp.user.exception.GenericErrorException;
+import com.example.secretsantaapp.common.exception.GenericErrorException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;

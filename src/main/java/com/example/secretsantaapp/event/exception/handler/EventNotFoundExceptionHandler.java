@@ -1,6 +1,6 @@
-package com.example.secretsantaapp.user.exception.handler;
+package com.example.secretsantaapp.event.exception.handler;
 
-import com.example.secretsantaapp.user.exception.GenericErrorException;
+import com.example.secretsantaapp.event.exception.EventNotFoundException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,15 +12,14 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class GenericErrorExceptionHandler extends ResponseEntityExceptionHandler {
-
-  @ExceptionHandler(GenericErrorException.class)
-  public ResponseEntity<Object> handleInternalServerError(
-      GenericErrorException ex, WebRequest request) {
+public class EventNotFoundExceptionHandler extends ResponseEntityExceptionHandler {
+  @ExceptionHandler(EventNotFoundException.class)
+  public ResponseEntity<Object> handleEventNotFoundException(
+      EventNotFoundException ex, WebRequest request) {
     Map<String, Object> body = new LinkedHashMap<>();
     body.put("timestamp", LocalDateTime.now());
-    body.put("message", ex.getMessage());
+    body.put("message", "Event not found");
 
-    return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
   }
 }
