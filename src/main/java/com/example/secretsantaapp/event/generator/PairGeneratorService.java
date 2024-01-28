@@ -3,6 +3,7 @@ package com.example.secretsantaapp.event.generator;
 import com.example.secretsantaapp.event.dto.SantaPairDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +17,7 @@ public class PairGeneratorService {
         List<String> receivers = emails.stream().toList();
         List<String> santas = emails.stream().toList();
 
-        List<SantaPairDTO> pairs = Collections.emptyList();
+        List<SantaPairDTO> pairs = new ArrayList<>();
         for (String santa: santas
              ) {
             var targets = receivers.stream()
@@ -27,7 +28,9 @@ public class PairGeneratorService {
                     .findFirst().
                     get();
             pairs.add(new SantaPairDTO(santa, target));
-            receivers.remove(target);
+            receivers = receivers.stream()
+                    .filter(email -> !target.equals(email))
+                    .collect(Collectors.toList());
         }
         return pairs;
     }

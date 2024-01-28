@@ -16,14 +16,13 @@ import com.example.secretsantaapp.user.UserService;
 import com.example.secretsantaapp.user.exception.UserAlreadyExistsException;
 import com.example.secretsantaapp.util.CommonUtil;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RequiredArgsConstructor
 @Service
@@ -103,9 +102,12 @@ public class EventService {
   public EventDTO addParticipantToEvent(String eventUniqueId, String email){
     Optional<Event> eventOptional = eventRepository.findByEventUniqueString(eventUniqueId);
     Event event = eventOptional.orElseThrow(EventNotFoundException::new);
-    Set<String> participants = event.getParticipantEMails();
-    if(!participants.isEmpty() && participants.contains(email)){
+    List<String> participants = event.getParticipantEMails();
+    if(!isEmpty(participants) && participants.contains(email)){
       throw new UserAlreadyExistsException("User is already in this event!");
+    }
+    if(participants == null){
+      participants = new ArrayList<>();
     }
     participants.add(email);
     event.setParticipantEMails(participants);
