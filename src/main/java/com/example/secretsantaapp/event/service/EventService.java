@@ -16,14 +16,13 @@ import com.example.secretsantaapp.user.UserService;
 import com.example.secretsantaapp.user.exception.UserAlreadyExistsException;
 import com.example.secretsantaapp.util.CommonUtil;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -120,10 +119,15 @@ public class EventService {
     if(event.getStartedAt() != null){
       throw new EventAlreadyStartedException("This event has already been started!");
     }
-    var pairs = pairGeneratorService.generatePairs(event.getParticipantEMails());
+    var generatedPairsDtos = pairGeneratorService.generatePairs(event.getParticipantEMails());
     //Update event there with pairs and started at;
-
-    return pairs;
+    var pairs = generatedPairsDtos.stream()
+                    .map(pairDto -> santaPairFromDto(pairDto))
+                            .collect(Collectors.toList());
+    event.setSantaPairs(pairs);
+    event.setStartedAt(new Date());
+    eventRepository.save(event);
+    return generatedPairsDtos;
   }
 
   public List<SantaPairDTO> getSantaPairs(String eventUniqueId) {
@@ -138,5 +142,15 @@ public class EventService {
     Event event = eventOptional.orElseThrow(EventNotFoundException::new);
 
     eventRepository.delete(event);
+  }
+
+
+  private SantaPair santaPairFromDto(SantaPairDTO santaPairDTO){
+    User user = userService.loadUserByUsername(santaPairDTO.getUserUsername());
+    User secretSantaFor =
+            userService.loadUserByUsername(santaPairDTO.getSecretSantaForUsername());
+
+    SantaPair santaPair = santaPairService.createSantaPair(user, secretSantaFor);
+    return santaPair;
   }
 }
