@@ -3,6 +3,8 @@ package com.example.secretsantaapp.event.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +23,7 @@ public class Event {
   private String name;
   private String eventUniqueString;
   private double priceLimit;
-
+  private Set<String> participantEMails;
   @DocumentReference(lazy = true)
   private List<SantaPair> santaPairs;
 
