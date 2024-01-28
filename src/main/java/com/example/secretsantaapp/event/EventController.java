@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @RestController
 @RequestMapping(value = "/api/v1/event")
 public class EventController {
@@ -58,6 +60,20 @@ public class EventController {
       @PathVariable String eventUniqueId) {
     List<SantaPairDTO> santaPairDTOList = eventService.getSantaPairs(eventUniqueId);
     return new ResponseEntity<>(santaPairDTOList, HttpStatus.OK);
+  }
+
+  @PutMapping("/{eventUniqueId}/join/{email}")
+  public ResponseEntity<EventDTO> addParticipantToEvent(@PathVariable String eventUniqueId, @PathVariable String email){
+    UserDTO userDTO = userService.getUserByEmail(email);
+    if(isEmpty(userDTO)){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity<>(eventService.addParticipantToEvent(eventUniqueId, email), HttpStatus.OK);
+  }
+
+  @PostMapping("/{eventUniqueId}/start")
+  public ResponseEntity<List<SantaPairDTO>> startEvent(@PathVariable String eventUniqueId){
+    return new ResponseEntity<>(eventService.startEvent(eventUniqueId), HttpStatus.OK);
   }
 
   @PostMapping("/{eventUniqueId}/pair")
