@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @RestController
-@RequestMapping(value = "/api/v1/event")
+@RequestMapping(value = "/api/v1/events")
 public class EventController {
   private final EventService eventService;
   private final UserService userService;

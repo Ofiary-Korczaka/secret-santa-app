@@ -23,7 +23,7 @@ public class Event {
   private String name;
   private String eventUniqueString;
   private double priceLimit;
-  private Set<String> participantEMails;
+  private List<String> participantEMails;
   @DocumentReference(lazy = true)
   private List<SantaPair> santaPairs;
 
